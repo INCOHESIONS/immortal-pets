@@ -1,32 +1,25 @@
 {
-  "schemaVersion": 1,
-  "id": "immortal_pets",
-  "version": "${version}",
-  "name": "Immortal Pets",
-  "description": "Makes player's pets immortal",
-  "authors": [],
-  "contact": {},
-  "license": "MIT",
-  "icon": "assets/immortal_pets/icon.png",
-  "environment": "*",
-  "entrypoints": {
-    "client": [
-      "io.github.incohesions.immortal_pets.client.Immortal_petsClient"
+    "schemaVersion": 1,
+    "id": "immortal_pets",
+    "version": "${version}",
+    "name": "Immortal Pets",
+    "description": "Makes player's pets immortal",
+    "authors": [],
+    "contact": {},
+    "license": "MIT",
+    "icon": "assets/immortal_pets/icon.png",
+    "environment": "*",
+    "entrypoints": {
+        "main": [
+            "io.github.incohesions.immortal_pets.ImmortalPets"
+        ]
+    },
+    "mixins": [
+        "immortal_pets.mixins.json"
     ],
-    "main": [
-      "io.github.incohesions.immortal_pets.Immortal_pets"
-    ]
-  },
-  "mixins": [
-    "immortal_pets.mixins.json",
-    {
-      "config": "immortal_pets.client.mixins.json",
-      "environment": "client"
+    "depends": {
+        "fabricloader": ">=${loader_version}",
+        "fabric": "*",
+        "minecraft": "${minecraft_version}"
     }
-  ],
-  "depends": {
-    "fabricloader": ">=${loader_version}",
-    "fabric": "*",
-    "minecraft": "${minecraft_version}"
-  }
 }
