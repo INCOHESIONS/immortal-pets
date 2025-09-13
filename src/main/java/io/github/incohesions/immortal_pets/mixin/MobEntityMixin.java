@@ -13,9 +13,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -30,14 +28,13 @@ public abstract class MobEntityMixin extends LivingEntity {
         final Hand hand,
         final CallbackInfoReturnable<ActionResult> cir
     ) {
-        final var self = tameable();
-
         if (
-            self != null &&
-            self.getOwner() == player &&
+            this instanceof Tameable tameable &&
+            tameable.getOwner() == player &&
             getWorld() instanceof ServerWorld server &&
             Registries.ITEM.getEntry(player.getStackInHand(hand).getItem()).isIn(ImmortalPets.PET_POISON)
         ) {
+            player.getStackInHand(hand).decrement(1);
             kill(server);
             cir.setReturnValue(ActionResult.PASS);
         }
@@ -49,16 +46,9 @@ public abstract class MobEntityMixin extends LivingEntity {
         final DamageSource source,
         final float amount
     ) {
-        final var self = tameable();
-
         return (
-            (self == null || self.getOwner() == null || source.isOf(DamageTypes.GENERIC_KILL)) &&
+            (!(this instanceof Tameable tameable) || tameable.getOwner() == null || source.isOf(DamageTypes.GENERIC_KILL)) &&
             super.damage(world, source, amount)
         );
-    }
-
-    @Unique
-    private @Nullable Tameable tameable() {
-        return this instanceof Tameable ? (Tameable) this : null;
     }
 }
